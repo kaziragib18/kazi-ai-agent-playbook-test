@@ -5,13 +5,26 @@ const KEY = 'reading-list';
 
 /** @typedef {{ id: string, title: string, author: string, read: boolean }} Book */
 
+/** Drop malformed entries; give missing or duplicate ids a fresh one so one click hits one book. @param {any[]} items @returns {Book[]} */
+function clean(items) {
+  const seen = new Set();
+  return items
+    .filter(b => b && typeof b.title === 'string' && typeof b.author === 'string')
+    .map(b => {
+      let id = typeof b.id === 'string' && b.id ? b.id : '';
+      while (!id || seen.has(id)) id = Math.random().toString(36).slice(2);
+      seen.add(id);
+      return { id, title: b.title, author: b.author, read: b.read === true };
+    });
+}
+
 /** @returns {Book[]} */
 function load() {
   let raw = null;
   try {
     raw = localStorage.getItem(KEY);
     const books = JSON.parse(raw || '[]');
-    if (Array.isArray(books)) return books;
+    if (Array.isArray(books)) return clean(books);
   } catch {}
   // Unreadable data: keep a copy so the next save doesn't destroy it.
   if (raw) try { localStorage.setItem(KEY + '.corrupt', raw); } catch {}

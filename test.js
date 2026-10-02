@@ -37,6 +37,12 @@ assert.equal(store[KEY + '.corrupt'], '{not json', 'corrupt data backed up');
 store[KEY] = '{"a":1}';
 assert.deepEqual(load(), [], 'non-array storage falls back to empty');
 
+store[KEY] = JSON.stringify([null, 5, { title: 'A', author: 'x', read: false, id: 'd' }, { title: 'B', author: 'y', read: false, id: 'd' }, { title: 'C', author: 'z' }, { title: 7, author: 'q' }]);
+const loaded = load();
+assert.deepEqual(loaded.map(b => b.title), ['A', 'B', 'C'], 'malformed entries dropped');
+assert.equal(new Set(loaded.map(b => b.id)).size, 3, 'duplicate and missing ids repaired');
+assert.equal(toggleRead(loaded, loaded[1].id).filter(b => b.read).length, 1, 'toggle hits one book');
+
 const lib = [{ id: '1', title: 'Dune', author: 'Frank Herbert', read: false }, { id: '2', title: 'Emma', author: 'Jane Austen', read: true }];
 assert.equal(filterBooks(lib, ''), lib, 'empty query returns the list');
 assert.equal(filterBooks(lib, '   '), lib, 'blank query returns the list');
