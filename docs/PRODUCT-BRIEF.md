@@ -16,10 +16,11 @@ Open the page → add a book (title + author) → later, tick it as read. The li
 2. See all books, newest first.
 3. Mark a book as read, and unmark it (a checkbox).
 4. The list persists in this browser (`localStorage`) across reloads and restarts.
+5. Search: a box that filters the list by title as you type; the query persists (added 2026-10-02, see docs/specs/search.md).
 
 ## Won'ts (MVP)
 - Accounts, sync, sharing, or a server.
-- Edit, search, sort options, tags, ratings, notes, cover images, ISBN lookup.
+- Edit, sort options, tags, ratings, notes, cover images, ISBN lookup.
 - Import/export.
 - Any build step or dependency.
 

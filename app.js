@@ -47,11 +47,31 @@ function removeBook(books, id) {
   return books.filter(b => b.id !== id);
 }
 
+const QUERY_KEY = KEY + '.query';
+
+/** @param {Book[]} books @param {string} query @returns {Book[]} */
+function filterBooks(books, query) {
+  const q = query.trim().toLowerCase();
+  return q ? books.filter(b => b.title.toLowerCase().includes(q)) : books;
+}
+
+/** @returns {string} */
+function loadQuery() {
+  try { return localStorage.getItem(QUERY_KEY) || ''; } catch { return ''; }
+}
+
+/** @param {string} query @returns {boolean} */
+function saveQuery(query) {
+  try { localStorage.setItem(QUERY_KEY, query); return true; } catch { return false; }
+}
+
 if (typeof document !== 'undefined') {
   const form = /** @type {HTMLFormElement} */ (document.getElementById('add'));
   const list = /** @type {HTMLUListElement} */ (document.getElementById('books'));
   const status = /** @type {HTMLParagraphElement} */ (document.getElementById('status'));
+  const search = /** @type {HTMLInputElement} */ (document.getElementById('search'));
   let books = load();
+  search.value = loadQuery();
 
   /** @param {Book[]} next */
   const update = next => {
@@ -61,7 +81,8 @@ if (typeof document !== 'undefined') {
   };
 
   const render = () => {
-    list.replaceChildren(...books.map(b => {
+    const shown = filterBooks(books, search.value);
+    list.replaceChildren(...shown.map(b => {
       const li = document.createElement('li');
       li.className = b.read ? 'read' : '';
       const label = document.createElement('label');
@@ -82,6 +103,7 @@ if (typeof document !== 'undefined') {
     }));
     const unread = books.filter(b => !b.read).length;
     /** @type {HTMLElement} */ (document.getElementById('count')).textContent =
+      books.length && !shown.length ? 'No books match.' :
       books.length ? `${books.length} ${books.length === 1 ? 'book' : 'books'}, ${unread} to read` : 'No books yet.';
   };
 
@@ -95,7 +117,9 @@ if (typeof document !== 'undefined') {
     /** @type {HTMLInputElement} */ (form.elements.namedItem('title')).focus();
   });
 
+  search.addEventListener('input', () => { saveQuery(search.value); render(); });
+
   render();
 }
 
-if (typeof module !== 'undefined') module.exports = { load, save, addBook, toggleRead, removeBook, KEY };
+if (typeof module !== 'undefined') module.exports = { load, save, addBook, toggleRead, removeBook, filterBooks, loadQuery, saveQuery, KEY };
