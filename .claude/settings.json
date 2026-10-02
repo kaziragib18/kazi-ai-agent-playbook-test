@@ -1,5 +1,17 @@
 {
   "enabledPlugins": {
     "kazi-ai-agent-playbook@kazi-playbook": true
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && node --check app.js && node test.js"
+          }
+        ]
+      }
+    ]
   }
 }
