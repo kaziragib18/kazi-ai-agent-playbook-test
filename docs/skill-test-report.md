@@ -140,3 +140,16 @@ Open skill issues: (1) `gg`/`recon` need tracked files, so a new repo gives fals
 - **43 `gg` checks, git vs non-git copy:** 36 clean, 6 skipped (placeholders: LEG-01, SEC-11, SEC-30, PERF-09, PERF-12, UX-10), 6 hits that are harmless (this report quoting patterns; SEC-12 is L2 `auth db` and hits `update(` in app.js). No errors. Only difference between modes: UX-01 (`\b`, see defect above). Scope `$SRC` to source files, not `.`.
 - **Phase 0 / G2 (scratch folder, "build me a habit tracker"): PASS.** Stopped at a draft brief awaiting approval; no stack decision, no code.
 - **Not run:** B12 hooks/CI (N/A at L1), B11 launch (no deploy), Phase 0 steps 3-7.
+
+## Round 4: search verified in browser (2026-10-02)
+
+| Check | Result | Evidence |
+|---|---|---|
+| AC1 filter, case-insensitive | PASS | "DUNE" showed Dune Messiah and Dune, hid Emma; clearing showed all 3 |
+| AC2 no match | PASS | "zzz" gave empty list and "No books match." |
+| AC3 textContent only | PASS | `<img onerror>` as query created 0 img elements |
+| AC4 persists | PASS | after reload box held "dune" and list stayed filtered |
+| AC5 `node test.js` | PASS | prints all checks passed |
+| Delete on filtered view | PASS | removed only the clicked book from list and storage |
+
+Driven with Playwright against a loopback `python3 -m http.server` (file: URLs are blocked). Not retested: review finding app.js:42 (duplicate ids), still open.
