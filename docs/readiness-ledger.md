@@ -1,4 +1,4 @@
-2026-10-02 | UX-01 | FAIL | L1 | raw colour #c00 at index.html:18, no token file | paths: index.html | owner: -
+2026-10-02 | UX-01 | PASS | L1 | only raw colour is the --error token at index.html:9; #status uses var(--error) | paths: index.html | verified
 2026-10-02 | OPS-01 | PASS | L1 | README.md documents run, test, data, deploy in 7 lines | paths: README.md | verified
 2026-10-02 | SEC-01 | PASS | L1 | .gitignore:1-2 lists .env; `git ls-files '.env*'` empty; secret regex finds none in app.js, index.html, test.js | paths: .gitignore, app.js, index.html | verified
 2026-10-02 | QA-01 | PASS | L1 | CLAUDE.md:5-6 documents "open index.html" and "node test.js" | paths: CLAUDE.md | verified

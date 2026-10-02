@@ -6,7 +6,7 @@
   <title>Reading List</title>
   <link rel="icon" href="data:,">
   <style>
-    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; --error: #c00; }
     body { max-width: 40rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
     form { display: flex; flex-wrap: wrap; gap: .5rem; align-items: end; }
     form label { display: flex; flex-direction: column; flex: 1 1 12rem; font-size: .9rem; }
@@ -15,7 +15,7 @@
     li { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .5rem 0; border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent); }
     li label { display: flex; gap: .6rem; align-items: center; cursor: pointer; }
     li.read span { text-decoration: line-through; opacity: .6; }
-    #status { color: #c00; }
+    #status { color: var(--error); }
   </style>
 </head>
 <body>
