@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reading List</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    body { max-width: 40rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+    form { display: flex; flex-wrap: wrap; gap: .5rem; align-items: end; }
+    form label { display: flex; flex-direction: column; flex: 1 1 12rem; font-size: .9rem; }
+    input[type=text], button { font: inherit; padding: .4rem .6rem; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .5rem 0; border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent); }
+    li label { display: flex; gap: .6rem; align-items: center; cursor: pointer; }
+    li.read span { text-decoration: line-through; opacity: .6; }
+    #status { color: #c00; }
+  </style>
+</head>
+<body>
+  <h1>Reading List</h1>
+  <form id="add">
+    <label>Title <input type="text" name="title" required pattern=".*\S.*" autocomplete="off"></label>
+    <label>Author <input type="text" name="author" required pattern=".*\S.*" autocomplete="off"></label>
+    <button>Add</button>
+  </form>
+  <p id="status" role="alert"></p>
+  <p id="count" aria-live="polite"></p>
+  <ul id="books"></ul>
+  <script src="app.js"></script>
+</body>
+</html>
