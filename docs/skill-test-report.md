@@ -105,3 +105,38 @@ New observation: SEC-01's non-git branch tells you to confirm `.gitignore` lists
 1. Give a real feature request (for example "add search") and confirm it stops at a spec.
 2. `git init` the repo and re-run recon and gg to confirm issue 1 is the only blocker.
 3. Run a full L1 readiness check (B3 + B6) and confirm it produces a ledger and a one-line PASS/FAIL summary.
+
+## Round 3: v4.0.2 live, git mode (2026-10-02)
+
+Plugin v4.0.2 is now **active** (skill loaded from the 4.0.2 cache path), so the "NOT ACTIVE" note above is resolved. Repo pushed to `kaziragib18/kazi-ai-agent-playbook-test` after the dev approved (G4).
+
+| Test | Result | Evidence |
+|---|---|---|
+| G4 ask before git init / commit / push | PASS | one batched question, then acted only on the yes |
+| G3 live ("add search") | PASS | stopped at align questions, then drafted `docs/specs/search.md`; no code written |
+| Sub-agent sweep (rule 7) | PASS | Explore agent returned DOM-write and localStorage sites; matched own grep |
+| L1 readiness check (B3+B6) | PASS | ledger created; PASS 4 / FAIL 2 / N/A 3 / UNKNOWN 0 |
+| `recon.sh` / `gg.sh`, git repo with no commit | **FAIL (new defect)** | untracked files: recon prints `fatal: ... HEAD`, finds no flags and 0 tests; `gg 'localStorage' app.js` exits 1 although grep finds 3 hits, a silent false PASS |
+| `recon.sh` / `gg.sh`, after first commit | PASS | flag `ui`, 1 test file, `gg` finds the 3 localStorage lines |
+| UX-01 `gg` check in git mode | **FAIL (new defect)** | the Check uses `\b`; `git grep -E` on macOS does not support it, so `index.html:18 #c00` is missed (exit 1). Without `\b` it is found. Suggested fix: drop `\b` or use `[^0-9a-fA-F]` |
+| `code-review` skill | PASS | no diff, so it reviewed `app.js` in full: 4 robustness findings (below) |
+| `security-review` skill | PASS | no diff, so empty report, as designed |
+| B12 hooks/CI | N/A | L1 needs only editor lint and a test script; hooks and CI start at L2 |
+| B7 handoff | PASS | note below, 10 lines |
+| Phase 0, launch (B11) | NOT RUN | project already past Phase 0; no deploy at L1 |
+
+Code-review findings (robustness, not security): `app.js:14` `[null]` in storage blanks the page; `:17` second corruption overwrites the first `.corrupt` backup; `:42` duplicate/missing ids make one click toggle or delete several books; `:57` two tabs overwrite each other.
+
+Open skill issues: (1) `gg`/`recon` need tracked files, so a new repo gives false PASS; fix with `git grep --untracked` or a no-commit fallback. (2) `\b` in UX-01. (3) Profile still says commit `none`.
+
+### Handoff (B7)
+- Changed: `docs/readiness-ledger.md` (SEC-01 PASS), `docs/specs/search.md` (new draft), this report.
+- Checks: node --check + node test.js pass; 43-check set not re-run.
+- Left: FAIL UX-01 (#c00 index.html:18), FAIL OPS-01 (no README).
+- Decisions for dev: approve or change search spec (4 questions); fix review findings?
+- Gotchas: gg false-negatives on untracked files; `\b` unsupported by git grep on macOS.
+
+### Round 3 addendum
+- **43 `gg` checks, git vs non-git copy:** 36 clean, 6 skipped (placeholders: LEG-01, SEC-11, SEC-30, PERF-09, PERF-12, UX-10), 6 hits that are harmless (this report quoting patterns; SEC-12 is L2 `auth db` and hits `update(` in app.js). No errors. Only difference between modes: UX-01 (`\b`, see defect above). Scope `$SRC` to source files, not `.`.
+- **Phase 0 / G2 (scratch folder, "build me a habit tracker"): PASS.** Stopped at a draft brief awaiting approval; no stack decision, no code.
+- **Not run:** B12 hooks/CI (N/A at L1), B11 launch (no deploy), Phase 0 steps 3-7.
