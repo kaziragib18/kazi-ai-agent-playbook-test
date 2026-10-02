@@ -34,6 +34,9 @@ assert.deepEqual(books.map(b => b.title), ['Emma'], 'delete');
 store[KEY] = '{not json';
 assert.deepEqual(load(), [], 'corrupt storage falls back to empty');
 assert.equal(store[KEY + '.corrupt'], '{not json', 'corrupt data backed up');
+store[KEY] = '{second bad';
+load();
+assert.equal(store[KEY + '.corrupt'], '{not json', 'first corrupt backup is not overwritten');
 store[KEY] = '{"a":1}';
 assert.deepEqual(load(), [], 'non-array storage falls back to empty');
 

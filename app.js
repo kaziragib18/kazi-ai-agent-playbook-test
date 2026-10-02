@@ -26,8 +26,8 @@ function load() {
     const books = JSON.parse(raw || '[]');
     if (Array.isArray(books)) return clean(books);
   } catch {}
-  // Unreadable data: keep a copy so the next save doesn't destroy it.
-  if (raw) try { localStorage.setItem(KEY + '.corrupt', raw); } catch {}
+  // Unreadable data: keep a copy so the next save doesn't destroy it. Never replace an earlier backup.
+  if (raw) try { if (localStorage.getItem(KEY + '.corrupt') === null) localStorage.setItem(KEY + '.corrupt', raw); } catch {}
   return [];
 }
 
