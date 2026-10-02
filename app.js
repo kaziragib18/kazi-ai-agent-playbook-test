@@ -130,7 +130,12 @@ if (typeof document !== 'undefined') {
     /** @type {HTMLInputElement} */ (form.elements.namedItem('title')).focus();
   });
 
-  search.addEventListener('input', () => { saveQuery(search.value); render(); });
+  let saveTimer = 0;
+  search.addEventListener('input', () => {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => saveQuery(search.value), 200);
+    render();
+  });
 
   render();
 }

@@ -31,3 +31,4 @@ Ready to paste into issues for the skill's maintainers. Environment: macOS (Darw
 ## Minor
 - Profile template's `commit:` stays `none` after `git init`, so the freshness rule cannot evaluate until the profile is updated.
 - Checks hit documentation that quotes their patterns; the docs say to scope `$SRC` to source dirs, but `recon.sh` reports `.` as the source dir for flat projects.
+- `gg` passes an unescaped `(` straight to `git grep -E`, which aborts with `fatal: ... empty (sub)expression` (exit 128, not the usual 1). Repro: `gg 'fetch(' app.js`. Checks must write `\(`; the exit code is easy to misread as "no hits". Same portability family as the `\b` defect.
